@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.8.21/themes/base/jquery-ui.css">
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+<link href="css/main.css" rel="stylesheet">
+
+  <style type="text/css">
+.help {
+    display:  inline-block;
+    position: relative;
+}
+.help-button {
+  color: #222;
+  font-weight: bold;
+  text-decoration: none;
+}
+.info-box {
+  background-color: beige;
+  display: none;
+  color: black;
+  font-family: sans-serif;
+  padding: 25px;
+  width: 600px;
+  position: absolute;
+  right: -500px;
+  bottom: -200px;
+  border: 20px solid darkgray;
+}
+.info-box::after {
+  content: " ";
+  display: block;
+  position: absolute;
+  left: -20px;
+  bottom: 0;
+  width: 0;
+  height: 0;
+}
+
+.info-box .close-button {
+  border: 2px solid #222;
+  color: #222;
+  float: right;
+  line-height: 1.0em;
+  padding: 1;
+  text-decoration: none;
+}
+  </style>
+
+    <title>BPMC Animation Introduction</title>
+<script src="logs/logExp.js"></script>
+<script>
+var participantID;
+var runType;
+var VUuserId;
+var animType;
+function setTheParticipantID(){
+    var VUname = document.getElementById('ID').value; //VU user id that the participant entered
+    //log this to system
+    document.getElementById('particID').value = participantID; //on the form, we set the value of the hidden ID field. This is set on getRunType, something like a1234567890
+    
+    participantID = 'un='+VUname+'&ran=' + participantID;//ID in the format of html link
+    VUuserId = VUname+animType; //bunu kullanicaz hep. baz400s gibi. 
+    console.log('participant ID full '+participantID);
+    console.log('sadece VU id ve anim tip '+VUuserId);
+    logExp("startButtonClicked",VUuserId);
+    console.log('participant ID full halde '+participantID);
+    logExp('fullIDGenerated '+participantID, VUuserId);
+    //console.log(participantID);
+	//alert(participantID);
+	return true;
+}
+function getRunType(){
+    //Generate Animation or static randomly
+    /*var animCode = Math.floor((Math.random() * 2) + 1); 
+    var animType;
+    console.log(animCode);
+    if(animCode == 1){
+        animType = 'S';
+    }else if(animCode == 2){
+        animType = 'A';
+    }*/
+    var mainLink = window.location.href.replace('.html', '');
+    animType = mainLink.slice(-1);
+    var ranNums = shuffle([1,2,3,4,5,6,7,8,9,0]);
+    var modelSet='';
+    for(var i=0; i < 10; i++){
+        modelSet = modelSet + ranNums[i];
+    }
+    console.log('generate ettiklerimiz '+ animType+modelSet);
+    participantID = animType+modelSet;
+    return true;
+}
+function shuffle(array) {
+    var i = array.length,
+        j = 0,
+        temp;
+    while (i--) {
+        j = Math.floor(Math.random() * (i+1));
+        // swap randomly chosen element with current element
+        temp = array[i];
+        array[i] = array[j];
+        array[j] = temp;
+    }
+    return array;
+}
+
+</script>
+</head>
+<body onload="getRunType()">
+<!--body-->
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+	  <a class="navbar-brand" href="#">
+        <img alt="PRIME Animation Prototype" src="images/logotext.png" height="48px" data-step="1" data-intro="Welcome to crowdeyes." data-position='right'>
+		
+      </a>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+        <h3>Process Model Comprehension Experiment</h3>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+    <div>
+        <div style="padding-left:50px;padding-right:200px">
+    <h2>Process Model Comprehension Experiment</h2>
+    <p>This study is conducted by Dr. Banu Aysolmaz and Prof. Dr. Hajo Reijers, Business Informatics Group, Vrije Universiteit Amsterdam as part of PRIME project funded by EU H2020-MSCA-IF-2014 call. The purpose of this experiment is to investigate how process model animation affects the comprehension by model readers. </p>
+    <p>General information on the study is at this moment provided verbally. Please consult the instructors if you have any questions. </p>
+
+    <h3>Start of the Test: </h3>
+    <p>Please enter your VU user name below and start the study. Your user name will only be used as a unique id for our records and to present you your result. No personal identification information is required in this study. Your name will not be associated with your answers and other recorded data. Your answers will be kept strictly confidential and evaluated only by the researchers; the obtained data will be used for scientific purposes.</p>
+    <p>Please contact us for your questions related to the study. We would like to thank you in advance for your participation in this study. You can contact Dr. B. Aysolmaz (Room: T444; Tel: 20 59 87767; E-mail: b.e.aysolmaz@vu.nl) or Prof. Dr. H. Reijers (Room: T452; Tel: 20 59 87824; E-mail: h.a.reijers@vu.nl) of the Department of Computer Science, VU University Amsterdam.</p>
+    <br>
+    
+    <div>
+    <form id= "myFormId" action="survey1.html?" method="GET">
+        <table>
+        <tr>
+            <td align="left"><label for="ID" style="padding-right:10px;">VU user name:</label> </td>
+            <td align="center"><input type="text" id="ID" name="un" required></td>
+        </tr>
+        <tr>
+            <td align="left"><input type="hidden" id="particID" name="ran"></td>
+        </tr>
+
+        <!--tr>
+            <td align="left"><label for="plname">Last Name: </label></td>
+            <td align="left"><input type="text" id="plname" name="PLname" required></td>
+        </tr-->
+        <!--tr>
+            <td align="left"><label for="pemail">Email: </label></td>
+            <td align="left"><input type="email" id="pemail" name="email"></td> 
+            <td><p><i>Please enter if you want to get information on the results of the study.</i></p></td>
+        </tr-->
+        </table>
+        <!--input type="checkbox" id="consent" name="Informed" value="Informed" required-->
+        <!--b><i>I am participating in this study voluntarily and am aware that I can quit participating at any time I want. <br>
+        I give my consent for the use of the information I provide for scientific purposes. </i></b--> 
+        <br>
+        <input class="btn btn-success" type="submit" value="Start >>" style="width:100px; margin-left:110px;" onclick="return setTheParticipantID();">
+        <br>
+        <br>
+    </form>
+        <!--input type="submit" value="Dene" onclick="setTheParticipantID()"-->
+        </div>
+        </div>
+    </div>
+<script>
+jQuery(document).ready(function($){
+  $('.help-button').on('click', function(e){
+    e.preventDefault();
+    $(this).siblings('.info-box').show();
+  });
+
+  $('.close-button').on('click', function(e){
+    e.preventDefault();
+    $(this).parents('.info-box').hide();
+  });
+});    
+</script>
+</body>
+</html>

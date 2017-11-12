@@ -1,0 +1,318 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+      <!-- seed dependencies (required for demo only) -->
+  <!--script src="../../bower_components/jquery/dist/jquery.js"></script-->
+  <!-- bpmn-js viewer -->
+<script src="../../bower_components/bpmn-js/dist/bpmn-viewer.js"></script>
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+<script src="js/w3data.js"></script>
+<script src="logs/logExp.js"></script>
+
+    <!--script>
+/* When the user clicks on the button, 
+toggle between hiding and showing the dropdown content */
+function getModelDropdown() {
+    document.getElementById("modelListDropdown").classList.toggle("show");
+}
+function getRoleDropdown() {
+    document.getElementById("roleListDropdown").classList.toggle("show");
+}
+// Close the dropdown if the user clicks outside of it
+window.onclick = function(e) {
+  if (!e.target.matches('.dropbtn')) {
+
+    var dropdowns = document.getElementsByClassName("dropdown-content");
+    for (var d = 0; d < dropdowns.length; d++) {
+      var openDropdown = dropdowns[d];
+      if (openDropdown.classList.contains('show')) {
+        openDropdown.classList.remove('show');
+      }
+    }
+  }
+}
+</script-->
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.8.21/themes/base/jquery-ui.css">
+<link href="css/main.css" rel="stylesheet">
+<link rel="stylesheet" href="../../bower_components/bpmn-js/dist/assets/diagram-js.css">
+<style type="text/css">
+    #canvas{
+    position: fixed;
+    height: 400px; 
+    width: 75%;
+    margin-left: 50px;
+    margin-top: 19px;
+}
+</style>
+    
+  <title>PRIME Process Animation</title>
+</head>
+<body onload="processId()">
+    
+<!-- element to draw bpmn diagram in -->
+  <div class="headingText" id="headingId"></div>
+  <div allCanvasArea id="canvas"></div>
+  <div canvasOverlayArea class="canvOverlay" hidden="true">
+      <button veryFirstAnim-button-click class="infoibutton btn btnexp btn-success" id="startVideo" onClick="logButtonClicked(this.id)"><span class="glyphicon glyphicon-play" id="bigglyphicone"></span>Play the Example Case</button>
+  </div>
+  <!--div canvasVideoArea class="infoi2" id="animVideo"-->
+      <video canvasVideoArea class="video" controls hidden="true">
+      <source src="images/ReworkMismatch.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+    </video> 
+  <!--/div-->
+  <div canvasOverlayArea2 class="canvOverlay" hidden="true">
+      <button nowPlayAnim-button-click class="infoibutton btn btnexp btn-success" id="startAltCases" onClick="logButtonClicked(this.id)">Now You Can Try <br />Alternative Cases<br />Click here</button>
+  </div>
+    
+<nav anim-controls-bar class="navbar navbar-exp navbar-default" hidden="true">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <!--div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+	  <!--a class="navbar-brand" href="#">
+        <img alt="PRIME Process Model Animation" src="images/logotext.png" height="48px" data-step="1" data-intro="Welcome to PRIME." data-position='right'>
+      </a-->
+    <!--/div-->
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+    <ul class="nav navbar-nav navbar-nav-exp">
+        <li><button replayEx-button-click class="btn btnexp btn-danger" id="resetPage" onClick="logButtonClicked(this.id)"><span class="glyphicon glyphicon-facetime-video"></span> Replay Example</button></li>
+        <!--li><button pause-button-click class="btn btn-danger" id="resetPage" onClick="logButtonClicked(this.id)"><span class="glyphicon glyphicon-pause"></span> Play/Pause</button></li-->
+        <!--li><button openExistFile-button-click class="btn btn-success" id="openExistFile"><span class="glyphicon glyphicon-upload"></span> Try Sample Models</button>         </li-->
+        
+        <!--li class="dropdown">
+            <button class="btn btn-info dropbtn" onclick="getModelDropdown()"><span class="glyphicon glyphicon-upload"></span> Try Sample Models</button>
+            <div class="dropdown-content" id="modelListDropdown">
+               <button IssueMan-button-click class="btn btn-default btn-sm">Issue Management</button>
+               <button openMT5File-button-click class="btn btn-default btn-sm">Building Application</button>
+              <button simpleScan-button-click class="btn btn-default btn-sm">Simple QR Scan</button>
+              <button defBlockStr-button-click class="btn btn-default btn-sm">Default XOR Block Structure</button>
+              <button defAndStr-button-click class="btn btn-default btn-sm">Default AND Block Structure</button>
+            </div>
+        </li-->
+        
+        <!--li><button animSel-button-click class="btn btn-success" id="strtAnimXORSel" onClick="logButtonClicked(this.id)"><span class="glyphicon glyphicon-play"></span> Start Continuous Animation</button></li-->
+        <li><div class="divider"/></li>
+        <!--li><button reset-button-click class="btn btn-success"><span class="glyphicon glyphicon-adjust"></span>Clear</button></li-->
+        <li><button animStep-button-click class="btn btnexp btn-success" id="strtAnimStep" onClick="logButtonClicked(this.id)"><span class="glyphicon glyphicon-refresh"></span>Restart Animation</button></li>
+        <li></li>
+        <li>
+            <div class="speedControl speedControlExp" id="speedControl" style="visibility:hidden;">    
+                <span class="speedInfo">Slow</span>
+                <input pace-click id="paceclick" class="speedInput" type="range" name="pace" class="btn btnexp" min="-3000" max="-100" value="-800" step="-100">
+                <span class="speedInfo">Fast</span>
+            </div>
+        </li>
+        <!--li><button pace-up-click class="btn btn-info" id="pace-up"><span class="glyphicon glyphicon-fast-backward"></span> Slower</button></li-->
+        <!--li><button pace-down-click class="btn btn-info" id="pace-down">Faster <span class="glyphicon glyphicon-fast-forward"></span></button></li-->
+        <!--li><button showFilters-button-click class="btn btn-default" id="showFilters">Show Filters</button></li-->
+        </ul>
+        
+      <!--ul class="nav navbar-nav navbar-right">
+        <li><span loadFile-button-click class="btn btn-info btn-file" id="loadBPMNFile"><span class="glyphicon glyphicon-upload"></span> Load Your BPMN<input type="file" data-open-file value="open" /></span></li>
+
+        <li><button animTutorial-button-click class="btn btn-warning" id="startTutorial"><span class="glyphicon glyphicon-book"></span> Go to Tutorial</button></li>
+        <li><button class="btn btn-default btn-file" id="countdown">05:00</button></li>
+      </ul-->
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+
+    <!--div questionOverlay class="infoi2"></div-->
+  <!--div id="diagram"></div-->
+  <!--div class="canvas" id="canvas">
+    <h3>diagram</h3>
+    <div id="js-canvas"></div>
+  </div-->
+    
+  <!--div class="console">
+    <h3>console</h3>
+    <textarea id="js-console" rows="0" cols="200"></textarea>
+  </div-->
+    <!--div>
+     <footer>
+  <p>Banu Aysolmaz @ VU BusI Group.
+  <a href="mailto:b.e.aysolmaz@vu.nl">
+  Contact me here.</a></p>
+    </footer> 
+    </div-->
+    <div id="hintBlock" class="hints-right">
+    <img alt="Gateway Hints" src="images/GatewayHints.png" width="80%">
+    </div>
+
+  <!-- scripts -->
+<script>
+var VUuserId;
+var partId;
+function processId()
+{
+    var mainLink = window.location.href;
+    var parameters = mainLink.split('?');
+    console.log(parameters);
+    var partId = parameters[1]; //full id in format un=abc&ran=s0123456789
+    var temp = parameters[1].split('&');
+    animType = temp[1].slice(4,5);
+    console.log('anim tipi '+animType);
+    VUuserId = temp[0].replace('un=','')+animType;
+    if(animType.indexOf('a') != -1){
+        //document.getElementsByClassName('canvOverlay')[0].style.visibility = "visible";
+        $('[canvasOverlayArea]').show();
+        //document.getElementsByClassName('canvOverlay')[1].style.visibility = "hidden";
+        //document.getElementsByClassName('video')[0].style.visibility = "hidden";
+        //document.getElementsByClassName('navbar')[0].style.visibility = "visible";
+        $('[anim-controls-bar]').show();
+    }
+    var newModel = temp[1].slice(-1);
+    console.log('sonraki model kacinci '+newModel);
+    //Assign heading text
+    var randNumberLeft = temp[1].replace('ran='+animType, '');
+    console.log('kalan rand number ne durumda '+ randNumberLeft);
+    var processNumber=10- randNumberLeft.length;
+    console.log('sayi dogru mu '+processNumber);
+    var headingText = 'Process '+processNumber+' of 10';
+    document.getElementById('headingId').innerHTML = headingText;
+    logExp("ReworkMismatch started. Process "+processNumber, VUuserId);
+    //Following is set in questions survey. Not needed here. 
+    /*if(processNumber == 10){
+        nextPageLink = 'thankyou.html?'+ temp[0]+'&'+temp[1].replace(newModel, '');
+    }else{
+        nextPageLink = 'prc' + newModel+ '.html?'+temp[0]+'&'+temp[1].replace(newModel, '');
+    }*/
+    $('#entry_1048931116').val(VUuserId);
+    console.log('yazilan deger '+ $('#entry_1048931116').val());
+    return partId;
+}
+function logButtonClicked(clicked_id){
+    logExp("pageButClicked "+clicked_id+" ", VUuserId);
+}
+function processType(){
+    return 'ReworkMismatch';
+}
+function getVUID(){
+    return VUuserId;
+}
+function getAppType(){
+    return 'Exp2';
+}
+</script>
+<!-- application -->
+    <div questionPart id="questionsDiv" class="questionsDivEnabled" w3-include-html="Questions-ReworkMismatch.html"></div>
+<script>w3IncludeHTML();
+alert('You can continue to the new model now');
+
+$('body').on('click','#ss-submit',function() {
+    var prcDAnswers = '';
+    var prcDQ1Y = $('#group_495984946_1');
+    var prcDQ1N = $('#group_495984946_2');
+    var prcDQ1K = $('#group_495984946_3');
+    if(prcDQ1Y[0].checked == true){
+        prcDAnswers = prcDAnswers + 'Q1 Y';
+    }else if(prcDQ1N[0].checked == true){
+        prcDAnswers = prcDAnswers + ' Q1 N';
+    }else if(prcDQ1K[0].checked == true){
+        prcDAnswers = prcDAnswers + ' Q1 K';
+    }
+    var prcDQ2Y = $('#group_1032708481_1');
+    var prcDQ2N = $('#group_1032708481_2');
+    var prcDQ2K = $('#group_1032708481_3');
+    if(prcDQ2Y[0].checked == true){
+        prcDAnswers = prcDAnswers + ' Q2 Y';
+    }else if(prcDQ2N[0].checked == true){
+        prcDAnswers = prcDAnswers + ' Q2 N';
+    }else if(prcDQ2K[0].checked == true){
+        prcDAnswers = prcDAnswers + ' Q2 K';
+    } 
+    var prcDQ3Y = $('#group_228493659_1');
+    var prcDQ3N = $('#group_228493659_2');
+    var prcDQ3K = $('#group_228493659_3');
+    if(prcDQ3Y[0].checked == true){
+        prcDAnswers = prcDAnswers + ' Q3 Y';
+    }else if(prcDQ3N[0].checked == true){
+        prcDAnswers = prcDAnswers + ' Q3 N';
+    }else if(prcDQ3K[0].checked == true){
+        prcDAnswers = prcDAnswers + ' Q3 K';
+    }  
+    var prcDQ4Y = $('#group_1529906582_1');
+    var prcDQ4N = $('#group_1529906582_2');
+    var prcDQ4K = $('#group_1529906582_3');
+    if(prcDQ4Y[0].checked == true){
+        prcDAnswers = prcDAnswers + ' Q4 Y';
+    }else if(prcDQ4N[0].checked == true){
+        prcDAnswers = prcDAnswers + ' Q4 N';
+    }else if(prcDQ4K[0].checked == true){
+        prcDAnswers = prcDAnswers + ' Q4 K';
+    }  
+    var prcDQ5Y = $('#group_1670588739_1');
+    var prcDQ5N = $('#group_1670588739_2');
+    var prcDQ5K = $('#group_1670588739_3');
+    if(prcDQ5Y[0].checked == true){
+        prcDAnswers = prcDAnswers + ' Q5 Y';
+    }else if(prcDQ5N[0].checked == true){
+        prcDAnswers = prcDAnswers + ' Q5 N';
+    }else if(prcDQ5K[0].checked == true){
+        prcDAnswers = prcDAnswers + ' Q5 K';
+    }  
+    var prcDQ6Y = $('#group_1248407282_1');
+    var prcDQ6N = $('#group_1248407282_2');
+    var prcDQ6K = $('#group_1248407282_3');
+    if(prcDQ6Y[0].checked == true){
+        prcDAnswers = prcDAnswers + ' Q6 Y';
+    }else if(prcDQ6N[0].checked == true){
+        prcDAnswers = prcDAnswers + ' Q6 N';
+    }else if(prcDQ6K[0].checked == true){
+        prcDAnswers = prcDAnswers + ' Q6 K';
+    }  
+    var prcDQ7Y = $('#group_521643643_1');
+    var prcDQ7N = $('#group_521643643_2');
+    var prcDQ7K = $('#group_521643643_3');
+    if(prcDQ7Y[0].checked == true){
+        prcDAnswers = prcDAnswers + ' Q7 Y';
+    }else if(prcDQ7N[0].checked == true){
+        prcDAnswers = prcDAnswers + ' Q7 N';
+    }else if(prcDQ7K[0].checked == true){
+        prcDAnswers = prcDAnswers + ' Q7 K';
+    }  
+    var prcDQ8Y = $('#group_716482098_1');
+    var prcDQ8N = $('#group_716482098_2');
+    var prcDQ8K = $('#group_716482098_3');
+    if(prcDQ8Y[0].checked == true){
+        prcDAnswers = prcDAnswers + ' Q8 Y';
+    }else if(prcDQ8N[0].checked == true){
+        prcDAnswers = prcDAnswers + ' Q8 N';
+    }else if(prcDQ8K[0].checked == true){
+        prcDAnswers = prcDAnswers + ' Q8 K';
+    }  
+    var prcDQ9N = $('#group_42801046_1');
+    var prcDQ9Y = $('#group_42801046_2');
+    var prcDQ9D = $('#group_42801046_other_option_response');
+    console.log('free hand yazilan aciklama ne');
+    console.log(prcDQ9D.context.forms[0][25].value);
+    var prcDQ9DAnswer = prcDQ9D.context.forms[0][25].value; 
+    if(prcDQ9Y[0].checked == true){
+        prcDAnswers = prcDAnswers + ' Q9 Y '+ prcDQ9DAnswer;
+    }else if(prcDQ9N[0].checked == true){
+        prcDAnswers = prcDAnswers + ' Q9 N';
+    }
+    var timeStamp = Math.floor(Date.now() / 1000);
+    logExp("RM Answers "+prcDAnswers+" "+timeStamp, VUuserId, false);
+  logButtonClicked('ss-submit');
+  console.log('submit clicked geliyor mu');
+});
+</script>
+<script src="js/prime_bundle.js"></script>
+</body>
+</html>

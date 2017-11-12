@@ -1,0 +1,311 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.8.21/themes/base/jquery-ui.css">
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+<link href="css/main.css" rel="stylesheet">
+
+  <style type="text/css">
+.help {
+    display:  inline-block;
+    position: relative;
+}
+.help-button {
+  color: #222;
+  font-weight: bold;
+  text-decoration: none;
+}
+.info-box {
+  background-color: beige;
+  display: none;
+  color: black;
+  font-family: sans-serif;
+  padding: 25px;
+  width: 600px;
+  position: absolute;
+  right: -500px;
+  bottom: -200px;
+  border: 20px solid darkgray;
+}
+.info-box::after {
+  content: " ";
+  display: block;
+  position: absolute;
+  left: -20px;
+  bottom: 0;
+  width: 0;
+  height: 0;
+}
+
+.info-box .close-button {
+  border: 2px solid #222;
+  color: #222;
+  float: right;
+  line-height: 1.0em;
+  padding: 1;
+  text-decoration: none;
+}
+  </style>
+
+    <title>BPMC Animation Introduction</title>
+<script src="logs/logExp.js"></script>
+<script src="readTypeN.js"></script>
+<script>
+var participantID;
+var runType;
+var VUuserId;
+var animType;
+var expTypeFromFile="";
+function setTheParticipantID(){
+    //var VUname = document.getElementById('ID').value; //VU user id that the participant entered
+    //log this to system
+    document.getElementById('particID').value = participantID; //on the form, we set the value of the hidden ID field. This is set on getRunType, something like a1234567890
+    var fname = document.getElementById('pfname').value;
+    var lname = document.getElementById('plname').value;
+    var pemail = document.getElementById('pemail').value;
+    var informedChecked = document.getElementById('consent').checked;
+    //For TU/e, we remove the user name and use email instead of the user name
+    var VUname = pemail.split('@')[0];
+    console.log('email ilk parcasi '+VUname);
+    //for submitting with the form, set hidden value
+    document.getElementById('ID').value = VUname; 
+    
+    console.log('fieldlarin icinde ne yaziyor ');
+    console.log(fname);
+    console.log(lname);
+    console.log(informedChecked);
+    if(!fname || fname.length === 0)
+    {
+      alert("Please enter your name.");
+      return false;
+    }else if(!lname || lname.length === 0)
+    {
+      alert("Please enter your surname");
+      return false;
+    }else if(!pemail || pemail.length === 0)
+    {
+      alert("Please enter your email.");
+      return false;
+    }else if(!pemail.includes('@')){
+      alert("Please enter a valid email.");
+      return false;
+    }else if(informedChecked == false)
+    {
+      alert("Please check the box to give your consent. ");
+      return false;
+    }
+    
+    var consentName = fname + " " + lname +" "+ pemail;
+    //Bunu ayri bir dosyaya loglasak daha iyi olur. Sonuclar ve informed consent ayri yani
+    logExp(consentName, "InformedConsent", false);
+    
+    participantID = 'un='+VUname+'&ran=' + participantID;//ID in the format of html link
+    VUuserId = VUname+animType; //bunu kullanicaz hep. baz400s gibi. 
+    console.log('participant ID full '+participantID);
+    console.log('sadece VU id ve anim tip '+VUuserId);
+    logExp("startButtonClicked",VUuserId, false);
+    console.log('participant ID full halde '+participantID);
+    logExp('fullIDGenerated '+participantID, VUuserId, false);
+    //window.open("survey1.html?"+participantID);
+    //document.getElementById('myFormId').action = "survey1.html?"+participantID;
+    //console.log(participantID);
+	//alert(participantID);
+	return true;
+}
+function getRunType(){
+    //check browser type and warn the user first. 
+    // Opera 8.0+
+    //var isOpera = (!!window.opr && !!opr.addons) || !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0;
+
+    // Firefox 1.0+
+    var isFirefox = typeof InstallTrigger !== 'undefined';
+
+    // Safari 3.0+ "[object HTMLElementConstructor]" 
+    //var isSafari = Object.prototype.toString.call(window.HTMLElement).indexOf('Constructor') > 0 || (function (p) { return p.toString() === "[object SafariRemoteNotification]"; })(!window['safari'] || safari.pushNotification);
+
+    // Internet Explorer 6-11
+    //var isIE = /*@cc_on!@*/false || !!document.documentMode;
+
+    // Edge 20+
+    //var isEdge = !isIE && !!window.StyleMedia;
+
+    // Chrome 1+
+    var isChrome = !!window.chrome && !!window.chrome.webstore;
+
+    // Blink engine detection
+    //var isBlink = (isChrome || isOpera) && !!window.CSS;
+    
+    if(isChrome == false){
+        
+        if(isFirefox == true){
+            alert("Please prefer Google Chrome Web Browser. \n If you continue with Firefox, use arrow keys instead of 'Next' button during the Tutorial.");
+        }else{
+            alert("Please use Google Chrome Web Browser to perform this test. \n Please do not continue the test with this browser.");
+            return false;
+        }
+    }
+    
+    //Generate Animation or static randomly
+    /*var animCode = Math.floor((Math.random() * 2) + 1); 
+    var animType;
+    console.log(animCode);
+    if(animCode == 1){
+        animType = 'S';
+    }else if(animCode == 2){
+        animType = 'A';
+    }*/
+    //Animation type will be obtained from the server file, rather than the link. 
+    //var mainLink = window.location.href.replace('.html', '');
+    //animType = mainLink.slice(-1);
+    var ranNums = shuffle([1,2,3,4,5,6,7,8,9,0]);
+    var modelSet='';
+    for(var i=0; i < 10; i++){
+        modelSet = modelSet + ranNums[i];
+    }
+    animType = 'a';//if there is error and cannot be updated, default is A
+    expTypeFromFile = readType();
+    console.log("Animation Type Ne yazdi? "+expTypeFromFile);
+    var expTypeNumbers = expTypeFromFile.replace('Static:', '').replace('Animation:', ''); //only numbers will be left, first num of static, then animation
+    console.log("num of statik and animation "+expTypeNumbers);
+    
+    var numofStaticExecution = Number(expTypeNumbers.split(',')[0]);
+    var numofAnimationExecution = Number(expTypeNumbers.split(',')[1]);
+    console.log('static and animation num '+numofStaticExecution+' '+numofAnimationExecution);
+    if(numofStaticExecution < numofAnimationExecution){
+        animType = 's';
+        console.log('statike girdi');
+    }else if(numofStaticExecution > numofAnimationExecution){
+        animType = 'a';
+        console.log('anime girdi');
+    }else{//if they are equal
+        var randomExpType = Math.floor(Math.random()*2);
+        if(randomExpType > 0)
+            animType = 'a';
+        else
+            animType = 's';
+        console.log('anim type ne oldu random '+randomExpType+animType);
+    }
+    console.log('Animation tipi ne oldu '+animType);
+    
+    console.log('generate ettiklerimiz '+ animType+modelSet);
+    participantID = animType+modelSet;
+    
+    return true;
+}
+function shuffle(array) {
+    var i = array.length,
+        j = 0,
+        temp;
+    while (i--) {
+        j = Math.floor(Math.random() * (i+1));
+        // swap randomly chosen element with current element
+        temp = array[i];
+        array[i] = array[j];
+        array[j] = temp;
+    }
+    return array;
+}
+
+</script>
+</head>
+<body onload="getRunType()">
+<!--body-->
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+	  <a class="navbar-brand" href="#">
+        <img alt="PRIME Animation Prototype" src="images/logotext.png" height="48px" data-step="1" data-intro="Welcome to crowdeyes." data-position='right'>
+		
+      </a>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+        <h3>Process Model Comprehension Test</h3>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+    <div>
+        <div style="padding-left:50px;padding-right:200px">
+    <h2>Process Model Comprehension Test</h2>
+    <p>This study is conducted by Business Informatics Group, Vrije Universiteit Amsterdam (VU) as part of PRIME project funded by EU H2020-MSCA-IF-2014 scheme, in collaboration with Eindhoven University of Technology (TUe). The purpose of this test is to investigate how process model animation affects the comprehension by model readers. </p>
+    <p>In the following pages, first, you will be requested to fill a survey about your experience with process models. Then you will receive a tutorial about the test. During the test, you will receive 10 process models and 9 questions for each model. You will see each process model in consequtive pages. Determined randomly, you will observe the process models either with or without the animation. The test will be finalized with a short feedback survey. 
+    </p>
+    <!--p>A <a href="https://www.bol.com/nl/m/cadeaubon/bol-com-cadeaubonnen/index.html" target="_blank"><b>prize of €50</b> voucher</a> will be awarded to the respondent who performs the <b>highest</b> score in the test. Additionally, another respondent who will be <b>randomly</b> selected with a draw will be awarded a <a href="https://www.bol.com/nl/m/cadeaubon/bol-com-cadeaubonnen/index.html" target="_blank"><b>€50 prize voucher</b></a>. </p-->
+    <p>More information is provided in the <a href="./Information-PRIMEExperiment.pdf" target="_blank">Information Form</a>. Please consult us if you have any questions before continuing with the test. For any questions, you can contact Dr. B. Aysolmaz (Tel: 0616 464605; E-mail: <a href='mailto:b.e.aysolmaz@vu.nl'><b>b.e.aysolmaz@vu.nl</b></a> ).</p>
+    <p>Please perform this test on a <b>Google CHROME Browser</b>!</p>
+
+    <h3>Start of the Test: </h3>
+    <p>Please enter your name, surname and email below, and start the study. Your answers will be kept strictly confidential and evaluated only by the researchers; the obtained data will be used ONLY for scientific purposes. We would like to thank you in advance for your participation in this study.</p>
+    <br>
+    
+    <div>
+        <table>
+        <tr>
+            <td align="left"><label for="pfname">First Name: </label> </td>
+            <td align="left"><input type="text" id="pfname" name="PName"></td>
+        </tr>
+        <tr>
+            <td align="left"><label for="plname">Last Name: </label></td>
+            <td align="left"><input type="text" id="plname" name="PLname"></td>
+        </tr>
+        <tr>
+            <td align="left"><label for="pemail">Email: </label></td>
+            <td align="left"><input type="email" id="pemail" name="email"></td> 
+            <!--td><p><i>Please enter if you want to get the answers sent to you by e-mail.</i></p></td-->
+        </tr>        
+        </table>
+        <input type="checkbox" id="consent" name="Informed" value="Informed">
+        <b><i>I am participating in this study voluntarily and am aware that I can quit at any time I want. <br>
+        I give my consent for the use of the information I provide for scientific purposes as described in the <a href="./Information-PRIMEExperiment.pdf" target="_blank">Information Form</a>. </i></b> 
+        <br>
+    <form id= "myFormId" action="survey1.html?" method="GET">
+        <table>
+        <tr>
+            <!--td align="left"><label for="ID" style="padding-right:10px;">User Name:</label> </td-->
+            <td align="center"><input type="hidden" id="ID" name="un" required></td>
+        </tr>
+        <tr>
+            <td align="left"><input type="hidden" id="particID" name="ran"></td>
+        </tr>
+        </table>
+        <br>
+        <input class="btn btn-success" type="submit" value="Start >>" style="width:100px; margin-left:110px;" onclick="return setTheParticipantID();">
+        <br>
+        <br>
+    </form>
+        <!--input type="submit" value="Dene" onclick="setTheParticipantID()"-->
+        </div>
+        </div>
+    </div>
+<script>
+jQuery(document).ready(function($){
+  $('.help-button').on('click', function(e){
+    e.preventDefault();
+    $(this).siblings('.info-box').show();
+  });
+
+  $('.close-button').on('click', function(e){
+    e.preventDefault();
+    $(this).parents('.info-box').hide();
+  });
+});    
+</script>
+</body>
+</html>

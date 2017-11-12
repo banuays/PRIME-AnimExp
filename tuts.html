@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+      <!-- seed dependencies (required for demo only) -->
+  <!--script src="../../bower_components/jquery/dist/jquery.js"></script-->
+  <!-- bpmn-js viewer -->
+<script src="../../bower_components/bpmn-js/dist/bpmn-viewer.js"></script>
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+<script src="js/w3data.js"></script>
+<script src="logs/logExp.js"></script>
+<script src="js/intro.min.js"></script>    
+<script>
+var partId;
+var animType;
+var nextPageLink;
+var VUuserId;
+function processId()
+{
+    //var mainLink = window.location.href.replace('.html', '');
+    var mainLink = window.location.href;
+    //var animType = mainLink.slice(-1);
+    var parameters = mainLink.split('?');
+    console.log(parameters);
+    var partId = parameters[1]; //full id in format un=abc&ran=s0123456789
+    var temp = parameters[1].split('&');
+    animType = temp[1].slice(4,5);
+    var newModel = temp[1].slice(-1);
+    console.log('sonraki model kacinci '+newModel);
+    nextPageLink = 'prc' + newModel+ '.html?'+ temp[0]+'&'+temp[1].replace(newModel, '');
+    VUuserId=temp[0].replace('un=','') + animType;
+    console.log('VU user id '+VUuserId);
+    logExp("tutsStarted", VUuserId);
+    
+    console.log('anim typei alabiliyor muyum '+animType);
+    console.log('link ne oldu '+nextPageLink);
+    if(animType.indexOf('s') != -1){
+        document.getElementsByClassName('canvOverlay')[0].style.visibility = "hidden";
+        document.getElementsByClassName('canvOverlay')[1].style.visibility = "hidden";
+        document.getElementsByClassName('video')[0].style.visibility = "hidden";
+    }
+    
+    var processNumber=1;
+    var headingText = 'TUTORIAL EXAMPLE';
+    document.getElementById('headingId').innerHTML = headingText;
+    return partId;
+}
+function logButtonClicked(clicked_id){
+    logExp(partId+clicked_id+" ", VUuserId);
+}
+function processType(){
+    return 'ExStatic';
+}
+function getAppType(){
+    return 'Exp2';
+}
+</script>
+<!--script>
+/* When the user clicks on the button, 
+toggle between hiding and showing the dropdown content */
+function getModelDropdown() {
+    document.getElementById("modelListDropdown").classList.toggle("show");
+}
+function getRoleDropdown() {
+    document.getElementById("roleListDropdown").classList.toggle("show");
+}
+// Close the dropdown if the user clicks outside of it
+window.onclick = function(e) {
+  if (!e.target.matches('.dropbtn')) {
+
+    var dropdowns = document.getElementsByClassName("dropdown-content");
+    for (var d = 0; d < dropdowns.length; d++) {
+      var openDropdown = dropdowns[d];
+      if (openDropdown.classList.contains('show')) {
+        openDropdown.classList.remove('show');
+      }
+    }
+  }
+}
+</script-->
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.8.21/themes/base/jquery-ui.css">
+<link href="css/main.css" rel="stylesheet">
+<link rel="stylesheet" href="../../bower_components/bpmn-js/dist/assets/diagram-js.css">
+<link href="css/introjs.css" rel="stylesheet">
+<style type="text/css">
+    #canvas{
+    position: fixed;
+    height: 400px; 
+    width: 75%;
+    margin-left: 50px;
+    margin-top: 19px;
+}
+</style>
+    
+  <title>PRIME Process Animation</title>
+</head>
+<body onload="processId()">
+    
+<!-- element to draw bpmn diagram in -->
+  <div class="headingText" id="headingId"></div>
+  <div allCanvasArea id="canvas" style="width:70%;"></div>
+  <div canvasOverlayArea class="canvOverlay" hidden="true">
+      <button veryFirstAnim-button-click class="infoibutton btn btnexp btn-success"><span class="glyphicon glyphicon-play" id="bigglyphicone"></span>Play the Example Case</button>
+  </div>
+  <!--div canvasVideoArea class="infoi2" id="animVideo"-->
+      <video canvasVideoArea class="video" controls hidden="true">
+      <source src="images/ProcessD-Similar.webm" type="video/webm">
+    Your browser does not support the video tag.
+    </video> 
+  <!--/div-->
+  <div canvasOverlayArea2 class="canvOverlay" hidden="true">
+      <button nowPlayAnim-button-click class="infoibutton btn btnexp btn-success">Now You Can Try <br />Alternative Cases<br />Click here</button>
+  </div>
+    
+<nav anim-controls-bar class="navbar navbar-exp navbar-default">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <!--div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+	  <!--a class="navbar-brand" href="#">
+        <img alt="PRIME Process Model Animation" src="images/logotext.png" height="48px" data-step="1" data-intro="Welcome to PRIME." data-position='right'>
+      </a-->
+    <!--/div-->
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+    <ul class="nav navbar-nav navbar-nav-exp">
+        <li><button replayEx-button-click class="btn btnexp btn-danger" id="resetPage"  style="visibility:hidden;"><span class="glyphicon glyphicon-facetime-video"></span> Replay Example</button></li>
+        <!--li><button pause-button-click class="btn btn-danger" id="resetPage" onClick="logButtonClicked(this.id)"><span class="glyphicon glyphicon-pause"></span> Play/Pause</button></li-->
+        <!--li><button openExistFile-button-click class="btn btn-success" id="openExistFile"><span class="glyphicon glyphicon-upload"></span> Try Sample Models</button>         </li-->
+        
+        <!--li class="dropdown">
+            <button class="btn btn-info dropbtn" onclick="getModelDropdown()"><span class="glyphicon glyphicon-upload"></span> Try Sample Models</button>
+            <div class="dropdown-content" id="modelListDropdown">
+               <button IssueMan-button-click class="btn btn-default btn-sm">Issue Management</button>
+               <button openMT5File-button-click class="btn btn-default btn-sm">Building Application</button>
+              <button simpleScan-button-click class="btn btn-default btn-sm">Simple QR Scan</button>
+              <button defBlockStr-button-click class="btn btn-default btn-sm">Default XOR Block Structure</button>
+              <button defAndStr-button-click class="btn btn-default btn-sm">Default AND Block Structure</button>
+            </div>
+        </li-->
+        
+        <!--li><button animSel-button-click class="btn btn-success" id="strtAnimXORSel" onClick="logButtonClicked(this.id)"><span class="glyphicon glyphicon-play"></span> Start Continuous Animation</button></li-->
+        <li><div class="divider"/></li>
+        <!--li><button reset-button-click class="btn btn-success"><span class="glyphicon glyphicon-adjust"></span>Clear</button></li-->
+        <li><button animStep-button-click class="btn btnexp btn-success" id="strtAnimStep" style="visibility:hidden;"><span class="glyphicon glyphicon-refresh"></span>Restart Animation</button></li>
+        <!--li><button class="btn btn-success" id="strtTutorial" onclick="startIntroViewer()"><span class="glyphicon glyphicon-refresh"></span>Restart the Tutorial</button></li>
+        <li><button class="btn btn-success" id="finTutorial" onclick="window.open(nextPageLink,'_parent',false)"><span class="glyphicon glyphicon-stop"></span>Finish and Start the Test</button></li-->
+        <li>
+            <div class="speedControl speedControlExp" id="speedControl" style="visibility:hidden;">    
+                <span class="speedInfo">Slow</span>
+                <input pace-click id="paceclick" class="speedInput" type="range" name="pace" class="btn btnexp" min="-3000" max="-100" value="-800" step="-100">
+                <span class="speedInfo">Fast</span>
+            </div>
+        </li>
+        <!--li><button pace-up-click class="btn btn-info" id="pace-up"><span class="glyphicon glyphicon-fast-backward"></span> Slower</button></li-->
+        <!--li><button pace-down-click class="btn btn-info" id="pace-down">Faster <span class="glyphicon glyphicon-fast-forward"></span></button></li-->
+        <!--li><button showFilters-button-click class="btn btn-default" id="showFilters">Show Filters</button></li-->
+        </ul>
+        
+      <!--ul class="nav navbar-nav navbar-right">
+        <li><span loadFile-button-click class="btn btn-info btn-file" id="loadBPMNFile"><span class="glyphicon glyphicon-upload"></span> Load Your BPMN<input type="file" data-open-file value="open" /></span></li>
+
+        <li><button animTutorial-button-click class="btn btn-warning" id="startTutorial"><span class="glyphicon glyphicon-book"></span> Go to Tutorial</button></li>
+        <li><button class="btn btn-default btn-file" id="countdown">05:00</button></li>
+      </ul-->
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+    <li>
+        <p rows="10" cols="35" class="tutexptext"><b>If you have any questions, please contact us at <a href='mailto:b.e.aysolmaz@vu.nl'>b.e.aysolmaz@vu.nl</a> and <br />do not start the test now! </b></p>
+    </li>
+    <div questionPart id="questionsDiv" class="questionsDivEnabled" w3-include-html="Questions-Example.html"></div>
+    <div class="questionsDivOv" id="questionsDivOv">
+  </div>
+
+<div id="stepEnabled" style="position: absolute; left: 150px; top: 200px;"></div>
+<div id="finalHint" style="position: absolute; left: 40%; top: 40%;"></div>
+    <!--div questionOverlay class="infoi2"></div-->
+  <!--div id="diagram"></div-->
+  <!--div class="canvas" id="canvas">
+    <h3>diagram</h3>
+    <div id="js-canvas"></div>
+  </div-->
+    
+  <!--div class="console">
+    <h3>console</h3>
+    <textarea id="js-console" rows="0" cols="200"></textarea>
+  </div-->
+    <!--div>
+     <footer>
+  <p>Banu Aysolmaz @ VU BusI Group.
+  <a href="mailto:b.e.aysolmaz@vu.nl">
+  Contact me here.</a></p>
+    </footer> 
+    </div-->
+    <div id="hintBlock" class="hints-right">
+    <img id='hintBlockImg' alt="Gateway Hints" src="images/GatewayHints.png">
+    </div>
+
+  <!-- scripts -->
+<!-- application -->
+<script>w3IncludeHTML();</script>
+<script src="js/prime_bundle.js"></script>
+<script>
+      function startIntroViewer(){
+        //logExp("clickTutButton plainTut", partId);
+        var intro = introJs();
+        intro.setOptions({
+            steps: [
+            {
+                intro: "Welcome to the TUTORIAL. You will take the test with static process models. <br> <br> In this tutorial, we introduce the pages you will use. <br> You will see each process model and its related questions in a page like this."
+            },
+            {
+                element: '#canvas',
+                intro: "Here is the process model in BPMN notation.",
+                position: 'center'
+            },
+            /*{
+                element: '#stepEnabled',
+                intro: "When a task is 'enabled', it is ready to be executed. For example, in this process model, when the process starts, task A is enabled. The process can continue only after task A is executed.",
+                position: 'right'
+            },*/
+            {
+                element: '#hintBlock',
+                intro: "Here you can find some hints about the BPMN notation.",
+                position: 'top'
+            },
+            {
+                element: '#questionsDivOv',
+                intro: "Questions are listed here. There are eight yes/no questions and one open-ended question. All are related to the control flow aspects of the process model.",
+                position: 'top',
+                overlayOpacity: 0
+            },
+            {
+                element: '#questionsDivOv',
+                intro: "When you answer all the questions and press 'Submit' button at the end of the page, you will be taken to the next process model.",
+                position: 'right'
+            },
+            {
+                intro: "Now the test will start. If you have any questions, please contact us at <a href='mailto:b.e.aysolmaz@vu.nl'>b.e.aysolmaz@vu.nl</a> and do not start the test now. ",
+                position: 'center'
+            },
+            {
+                element: '#finalHint',
+                intro: "Now the test will start. If you have any questions, please contact us at <a href='mailto:b.e.aysolmaz@vu.nl'>b.e.aysolmaz@vu.nl</a> and do not start the test now. ",
+                position: 'center'
+            }
+            ],
+            exitOnEsc: false, 
+            exitOnOverlayClick:false,
+            showStepNumbers:false,
+            skipLabel: 'Exit',
+            //showButtons:false
+        }
+                        );
+          intro.start();
+          intro.oncomplete(function() {
+            window.open(nextPageLink,'_parent',false);
+          });
+          intro.onchange(function(targetElement) {
+              if(targetElement.id.indexOf("finalHint") != -1){
+                    window.open(nextPageLink,'_parent',false);
+               }
+          });
+      }
+    javascript:startIntroViewer(); //open this to start tutorial on page load
+</script>
+</body>
+</html>
